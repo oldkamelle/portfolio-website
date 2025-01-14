@@ -1,0 +1,325 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { LOCALES } from "../../misc/i18n/locales.ts";
+import { getRouteLangParam, useTranslations } from '../../misc/i18n/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getArtworks, getChiefArtworks, getAnimatics } from '../../misc/sanity/dataLoaders';
+
+export function getStaticPaths() {
+	return Object.keys(LOCALES)
+				 .map(lang => ({
+					params: { lang: getRouteLangParam(lang) },
+					props: { currentLang: lang }
+				 }));
+}
+
+const { currentLang } = Astro.props;
+const translate = useTranslations(currentLang);
+
+const chief_works = await getChiefArtworks(currentLang),
+	artworks = await getArtworks(currentLang),
+	animatics = await getAnimatics(currentLang);
+---
+
+<Layout>
+	<nav>
+		<ul class="base-list">
+			<li class="dropdown-menu">
+				{translate("language")}
+				<ul class="dropdown-content base-list">
+					{Object.keys(LOCALES).map(lang => (
+						<li>
+							<a href={getRelativeLocaleUrl(lang)}>
+								<i>{currentLang == lang ? <b>{LOCALES[lang].label}</b> : LOCALES[lang].label}</i>
+							</a>
+						</li>
+					))}
+				</ul>
+			</li>
+		</ul>
+	</nav>
+
+	<main>
+		<header>
+			<hgroup>
+				<h1>oldkamelle</h1>
+				<div>
+					<p>{translate("tagline")}</p>
+
+					<div>
+						<button id="contact" title={translate("contactAriaLabel")}>{translate("contact")}</button>
+						<p id="contact-result"><i>Email-i u kopjua</i></p>
+					</div>
+				</div>
+			</hgroup>
+
+			<ul id="chief-works" class="spotlight-group base-list" data-animation="fade">
+				{chief_works.map(work => (
+					<li>
+						<a 
+							class="spotlight" 
+							data-title={work.title} 
+							href={`https://res.cloudinary.com/oldkamelle/image/upload/${work.urlId}`}>
+							<img 
+								alt={work.alt} 
+								loading="lazy"
+								src={`https://res.cloudinary.com/oldkamelle/image/upload/c_thumb,w_670/${work.urlId}`}/>
+						</a>
+					</li>
+				))}
+			</ul>
+		</header>
+	</main>
+
+	<section id="portfolio">
+		<h2>{translate("portfolio")}</h2>
+
+		<article>
+			<details id="artworks">
+				<summary>{translate("artworks")}</summary>
+
+				<ul id="artworks-gallery" class="spotlight-group base-list" data-animation="fade">
+					{artworks.map(artwork => (
+						<li>
+							<a 
+								class="spotlight" 
+								data-title={artwork.title}
+								href={`https://res.cloudinary.com/oldkamelle/image/upload/${artwork.urlId}`}>
+								<img 
+									alt={artwork.alt} 
+									loading="lazy" 
+									src={`https://res.cloudinary.com/oldkamelle/image/upload/c_thumb,c_scale,w_700/${artwork.urlId}`}/>
+							</a>
+						</li>
+					))}
+				</ul>
+
+				<a class="back-to-top" title={translate("backToTopAriaLabel")} href="#artworks">⮝</a>
+			</details>
+		</article>
+
+		<article>
+			<details id="animatics">
+				<summary>{translate("animatics")}</summary>
+
+				<div id="animatics-gallery">
+					{animatics.map(animatic => (
+						<iframe 
+							width="430" 
+							height="242" 
+							src={`https://www.youtube.com/embed/${animatic.urlId}?loop=${animatic.isLoopable ? 1 : 0}`} 
+							title={animatic.title} 
+							frameborder="0" 
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+							referrerpolicy="strict-origin-when-cross-origin" 
+							allowfullscreen></iframe>
+					))}
+				</div>
+
+				<a aria-label={translate("backToTopAriaLabel")} class="back-to-top" href="#animatics">⮝</a>
+				</div>
+			</details>
+		</article>
+	</section>
+</Layout>
+
+<style>
+	img {
+		height: 100%;
+		width: 100%;
+		object-fit: cover; 
+	}
+
+	/* nav */
+	nav {
+		margin: 1em;
+	}
+
+	.dropdown-menu, .dropdown-content {
+		background-color: var(--light-color);
+		color: var(--dark-color);
+	}
+
+	.dropdown-menu {
+		--dropdown-item-margin: 0.5em;
+
+		cursor: pointer;
+		display: inline-block;
+		padding: var(--dropdown-item-margin);
+		
+		opacity: 45%;
+
+		&:hover {
+			opacity: 100%;
+			
+			.dropdown-content {
+				visibility: visible;
+			}
+		}
+	}
+
+	.dropdown-content {
+		display: block;
+		position: absolute;
+		visibility: hidden;
+		
+		margin-top: var(--dropdown-item-margin);
+		margin-left: 1em; /* pushes dropdown to the right */
+
+		li {
+			margin: 1em;
+		}
+
+		a:link {
+			text-decoration: none;
+		}
+	}
+
+	/* header & chief works */
+	header {
+		hgroup {
+			display: flex;
+			flex-wrap: wrap;
+			
+			justify-content: center; 
+			align-items: center;
+			gap: 0.3em; 
+
+			margin: 2em;
+
+			h1 {
+				font-family: "DM Serif Display", serif;
+				font-size: 55px; 
+				margin: 0;
+			}
+
+			p {
+				margin: 0;
+			}
+		}
+	}
+
+	#contact-result {
+		position: absolute;
+
+		opacity: 0;
+		transition: opacity ease 0.5s;
+
+		color: var(--highlight-color);
+		font-size: smaller;
+	}
+
+	#chief-works {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+
+		&:hover li:not(:hover) {
+			filter: grayscale(100%);
+		}
+	}
+
+	/* portfolio */
+	#portfolio {
+		margin: 5em 0;
+
+		h2 {
+			margin-top: 0;
+			text-align: center;
+		}
+
+		details {
+			background-color: var(--light-color);
+			color: var(--dark-color);
+			text-align: center;
+
+			border: 3px solid var(--dark-color);
+			border-radius: 1.5em 1.5em 0 0;
+			padding: 0 2em;
+
+			/* Achieves the overlapping folder tab look */
+			margin-bottom: -0.9em;
+			padding-bottom: 0.7em;
+		}
+
+		:last-child details {
+			padding-bottom: 0;
+		}
+
+		summary {
+			cursor: pointer;
+			font-weight: bold;
+
+			padding: 1em;
+		}
+	}
+	
+	.back-to-top {
+		text-decoration: none;
+		font-weight: bold;
+		font-size: 2em;
+
+		display: inline-block;
+		margin: 0.3em 0 0.5em 0;
+	}
+
+	#artworks-gallery {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+
+		>li {
+			max-height: 23em;
+		}
+	}
+
+	#animatics-gallery {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		gap: 0.3em; 
+	}
+
+	header, #portfolio {
+		--x-margin: 12em;
+		margin-left: var(--x-margin);
+		margin-right: var(--x-margin);
+	}
+
+	@media (max-width: 1300px) {
+		header, #portfolio {
+			--x-margin: 5em;
+			margin-left: var(--x-margin);
+			margin-right: var(--x-margin);
+		}
+
+		#artworks-gallery>li {
+			height: 18vw;
+		}
+
+		#animatics-gallery>iframe {
+			width: 345px;
+			height: 194px;
+		}
+	}
+	
+	@media (max-width: 850px) {
+		header, #portfolio {
+			margin-left: 0;
+			margin-right: 0;
+		}
+	}
+</style>
+
+<script define:vars={{pageLang: currentLang}}>
+	document.documentElement.lang = pageLang;
+
+	// Show success message after clicking "contact"
+	var contactResultExplanation = document.getElementById("contact-result");
+
+	document.getElementById("contact")?.addEventListener("click", () => {
+		navigator.clipboard.writeText("oldkamelle@gmail.com");
+
+		contactResultExplanation.style.opacity = "100%";
+		setTimeout(() => contactResultExplanation.style.opacity = "0", 2000);
+	});
+</script>

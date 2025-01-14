@@ -1,0 +1,16 @@
+{
+  "name": "",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@ascorbic/csv-loader": "^2.0.3",
+    "@sanity/client": "^6.24.3",
+    "astro": "^5.1.1"
+  }
+}
