@@ -4,3 +4,4 @@
 ![Cloudinary](https://img.shields.io/badge/cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
 
 Simple image-heavy more-serious portfolio. Peruse to your heart's content.
+If you have any suggestions/improvements regarding the alt and descriptions of the images, you are more than welcome to suggest them!
