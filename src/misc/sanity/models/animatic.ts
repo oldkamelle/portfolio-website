@@ -1,5 +1,7 @@
 export interface Animatic {
     title: string,
-    urlId: string,
-    isLoopable: boolean
+    url: string,
+
+    previewPicUrlId: string,
+    previewPicAlt: string
 }

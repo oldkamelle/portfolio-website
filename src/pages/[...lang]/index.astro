@@ -2,8 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { LOCALES } from "../../misc/i18n/locales.ts";
 import { getRouteLangParam, useTranslations } from '../../misc/i18n/utils';
-import { getRelativeLocaleUrl } from 'astro:i18n';
-import { getArtworks, getChiefArtworks, getAnimatics } from '../../misc/sanity/dataLoaders';
+import { getArtworks, getAnimatics } from '../../misc/sanity/dataLoaders';
 
 export function getStaticPaths() {
 	return Object.keys(LOCALES)
@@ -16,310 +15,239 @@ export function getStaticPaths() {
 const { currentLang } = Astro.props;
 const translate = useTranslations(currentLang);
 
-const chief_works = await getChiefArtworks(currentLang),
-	artworks = await getArtworks(currentLang),
+const artworks = await getArtworks(currentLang),
 	animatics = await getAnimatics(currentLang);
+
+const illustrationsLinkText = translate("illustrations"),
+	animaticsLinkText = translate("animatics");
 ---
 
-<Layout>
-	<nav>
-		<ul class="base-list">
-			<li class="dropdown-menu">
-				{translate("language")}
-				<ul class="dropdown-content base-list">
-					{Object.keys(LOCALES).map(lang => (
-						<li>
-							<a href={getRelativeLocaleUrl(lang)}>
-								<i>{currentLang == lang ? <b>{LOCALES[lang].label}</b> : LOCALES[lang].label}</i>
-							</a>
-						</li>
-					))}
-				</ul>
-			</li>
-		</ul>
-	</nav>
-
+<Layout currentLang={currentLang}>
 	<main>
-		<header>
-			<hgroup>
+		<header id="intro">
+			<div id="intro-header">
+				<button title={translate("closeBtn")} id="close-intro-btn" class="clear-btn">
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+						<path d="M18 6l-12 12" /><path d="M6 6l12 12" />
+					</svg>
+				</button>
+			</div>
+			
+			<div id="intro-body">
 				<h1>oldkamelle</h1>
+				<p>{translate("tagline")}</p>
 				<div>
-					<p>{translate("tagline")}</p>
-
-					<div>
-						<button id="contact" title={translate("contactAriaLabel")}>{translate("contact")}</button>
-						<p id="contact-result"><i>Email-i u kopjua</i></p>
-					</div>
+					<a href="mailto:oldkamelle@gmail.com" title={translate("contact")}>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+							<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+							<path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" />
+						</svg>
+					</a>
+					<a href="https://oldkamelle.tumblr.com" title="Tumblr">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon">
+							<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+							<path d="M14 2a1 1 0 0 1 1 1v3h3a1 1 0 0 1 .993 .883l.007 .117v4a1 1 0 0 1 -1 1h-3v4h3a1 1 0 0 1 .993 .883l.007 .117v4a1 1 0 0 1 -1 1h-4a5 5 0 0 1 -5 -5v-5h-3a1 1 0 0 1 -.993 -.883l-.007 -.117v-4a1 1 0 0 1 1 -1h1a2 2 0 0 0 2 -2v-1a1 1 0 0 1 1 -1z" />
+						</svg>
+					</a>
+					<a href="https://instagram.com/oldkamelle" title="Instagram">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+							<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+							<path d="M16.5 7.5v.01" />
+						</svg>                    
+					</a>
+					<a href="https://youtube.com/@oldkamelle" title="Youtube">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon">
+							<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+							<path d="M18 3a5 5 0 0 1 5 5v8a5 5 0 0 1 -5 5h-12a5 5 0 0 1 -5 -5v-8a5 5 0 0 1 5 -5zm-9 6v6a1 1 0 0 0 1.514 .857l5 -3a1 1 0 0 0 0 -1.714l-5 -3a1 1 0 0 0 -1.514 .857z" />
+						</svg>
+					</a>
 				</div>
-			</hgroup>
-
-			<ul id="chief-works" class="spotlight-group base-list" data-animation="fade">
-				{chief_works.map(work => (
-					<li>
-						<a 
-							class="spotlight" 
-							data-title={work.title} 
-							href={`https://res.cloudinary.com/oldkamelle/image/upload/${work.urlId}`}>
-							<img 
-								alt={work.alt} 
-								loading="lazy"
-								src={`https://res.cloudinary.com/oldkamelle/image/upload/c_thumb,w_670/${work.urlId}`}/>
-						</a>
-					</li>
-				))}
-			</ul>
+			</div>
 		</header>
+
+		<section id="illustrations" title={illustrationsLinkText}>
+			{artworks.map(work => (
+				<a 
+					class="spotlight" 
+					data-title={work.title} 
+					href={`https://res.cloudinary.com/oldkamelle/image/upload/q_auto:good/${work.urlId}`}>
+					<img 
+						alt={work.alt} 
+						loading="lazy"
+						src={`https://res.cloudinary.com/oldkamelle/image/upload/w_350/${work.urlId}`}/>
+				</a>
+			))}
+		</section>
+
+        <section id="animatics" title={animaticsLinkText}>
+            <ol class="clear-list">
+                {animatics.map(animatic => (
+                    <li>
+                        <picture>
+                            <img
+                                loading="lazy"
+                                alt={animatic.previewPicAlt}
+                                src={`https://res.cloudinary.com/oldkamelle/image/upload/w_400/q_auto:eco/${animatic.previewPicUrlId}`}
+                                />
+                        </picture>
+                        <p><a href={animatic.url}>{animatic.title}</a></p>
+                    </li>
+                ))}
+            </ol>
+        </section>
 	</main>
-
-	<section id="portfolio">
-		<h2>{translate("portfolio")}</h2>
-
-		<article>
-			<details id="artworks">
-				<summary>{translate("artworks")}</summary>
-
-				<ul id="artworks-gallery" class="spotlight-group base-list" data-animation="fade">
-					{artworks.map(artwork => (
-						<li>
-							<a 
-								class="spotlight" 
-								data-title={artwork.title}
-								href={`https://res.cloudinary.com/oldkamelle/image/upload/${artwork.urlId}`}>
-								<img 
-									alt={artwork.alt} 
-									loading="lazy" 
-									src={`https://res.cloudinary.com/oldkamelle/image/upload/c_thumb,c_scale,w_700/${artwork.urlId}`}/>
-							</a>
-						</li>
-					))}
-				</ul>
-
-				<a class="back-to-top" title={translate("backToTopAriaLabel")} href="#artworks">⮝</a>
-			</details>
-		</article>
-
-		<article>
-			<details id="animatics">
-				<summary>{translate("animatics")}</summary>
-
-				<div id="animatics-gallery">
-					{animatics.map(animatic => (
-						<iframe 
-							width="430" 
-							height="242" 
-							src={`https://www.youtube.com/embed/${animatic.urlId}?loop=${animatic.isLoopable ? 1 : 0}`} 
-							title={animatic.title} 
-							frameborder="0" 
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-							referrerpolicy="strict-origin-when-cross-origin" 
-							allowfullscreen></iframe>
-					))}
-				</div>
-
-				<a aria-label={translate("backToTopAriaLabel")} class="back-to-top" href="#animatics">⮝</a>
-				</div>
-			</details>
-		</article>
-	</section>
 </Layout>
 
 <style>
-	img {
-		height: 100%;
-		width: 100%;
-		object-fit: cover; 
-	}
+	#intro {
+		z-index: 2;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+		background-color: rgb(from var(--dark-grey-color) r g b / 97%);
+		border-radius: 10%;
 
-	/* nav */
-	nav {
-		margin: 1em;
-	}
-
-	.dropdown-menu, .dropdown-content {
-		background-color: var(--light-color);
-		color: var(--dark-color);
-	}
-
-	.dropdown-menu {
-		--dropdown-item-margin: 0.5em;
-
-		cursor: pointer;
-		display: inline-block;
-		padding: var(--dropdown-item-margin);
-		
-		opacity: 45%;
-
-		&:hover {
-			opacity: 100%;
-			
-			.dropdown-content {
-				visibility: visible;
-			}
-		}
-	}
-
-	.dropdown-content {
-		display: block;
-		position: absolute;
-		visibility: hidden;
-		
-		margin-top: var(--dropdown-item-margin);
-		margin-left: 1em; /* pushes dropdown to the right */
-
-		li {
+		#intro-header {
 			margin: 1em;
+			text-align: end;
+			opacity: 60%;
 		}
 
-		a:link {
-			text-decoration: none;
+		#intro-body {
+			text-align: center;
+			padding: 2em 3em;
+			padding-top: 0;
+		}
+
+        h1 {
+            margin: 0;
+            font-size: xx-large;
+        }
+
+        p {
+            margin-top: 0;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        #lang-option {
+            text-align: end;
+            margin-top: 2em;
+        }
+	}
+
+	#illustrations {
+		columns: 5;
+		gap: 0;
+
+		img {
+			display: block;
+			height: 100%;
+            width: 100%;
+            object-fit: cover;
 		}
 	}
 
-	/* header & chief works */
-	header {
-		hgroup {
+	#animatics {
+		display: none;
+		padding: 2em;
+
+		ol {
+			margin: 0.5em auto 1em auto;
 			display: flex;
+			justify-content: space-evenly;
 			flex-wrap: wrap;
-			
-			justify-content: center; 
-			align-items: center;
-			gap: 0.3em; 
+			gap: 1em;
 
-			margin: 2em;
+			li {
+				width: 17em;
 
-			h1 {
-				font-family: "DM Serif Display", serif;
-				font-size: 55px; 
-				margin: 0;
+				picture {
+					display: block;
+				}
+
+				img {
+					width: 100%;
+					height: 14em;
+					object-fit: cover;
+
+					border-radius: 0.5em;
+				}
+
+				p {
+					margin: 0;
+					margin-top: 0.3em;
+				}
 			}
-
-			p {
-				margin: 0;
-			}
-		}
-	}
-
-	#contact-result {
-		position: absolute;
-
-		opacity: 0;
-		transition: opacity ease 0.5s;
-
-		color: var(--highlight-color);
-		font-size: smaller;
-	}
-
-	#chief-works {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-
-		&:hover li:not(:hover) {
-			filter: grayscale(100%);
-		}
-	}
-
-	/* portfolio */
-	#portfolio {
-		margin: 5em 0;
-
-		h2 {
-			margin-top: 0;
-			text-align: center;
-		}
-
-		details {
-			background-color: var(--light-color);
-			color: var(--dark-color);
-			text-align: center;
-
-			border: 3px solid var(--dark-color);
-			border-radius: 1.5em 1.5em 0 0;
-			padding: 0 2em;
-
-			/* Achieves the overlapping folder tab look */
-			margin-bottom: -0.9em;
-			padding-bottom: 0.7em;
-		}
-
-		:last-child details {
-			padding-bottom: 0;
-		}
-
-		summary {
-			cursor: pointer;
-			font-weight: bold;
-
-			padding: 1em;
-		}
-	}
-	
-	.back-to-top {
-		text-decoration: none;
-		font-weight: bold;
-		font-size: 2em;
-
-		display: inline-block;
-		margin: 0.3em 0 0.5em 0;
-	}
-
-	#artworks-gallery {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-
-		>li {
-			max-height: 23em;
-		}
-	}
-
-	#animatics-gallery {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		align-items: center;
-		gap: 0.3em; 
-	}
-
-	header, #portfolio {
-		--x-margin: 12em;
-		margin-left: var(--x-margin);
-		margin-right: var(--x-margin);
+    	}
 	}
 
 	@media (max-width: 1300px) {
-		header, #portfolio {
-			--x-margin: 5em;
-			margin-left: var(--x-margin);
-			margin-right: var(--x-margin);
-		}
-
-		#artworks-gallery>li {
-			height: 18vw;
-		}
-
-		#animatics-gallery>iframe {
-			width: 345px;
-			height: 194px;
+		#illustrations {
+			columns: 3;
 		}
 	}
-	
+
 	@media (max-width: 850px) {
-		header, #portfolio {
-			margin-left: 0;
-			margin-right: 0;
+		#intro {
+			left: 0;
+			right: 0;
+			transform: translate(0, -50%);
+			border-radius: 0;
+
+			#intro-body {
+				padding-left: 0.5em;
+				padding-right: 0.5em;
+			}
+		}
+
+		#illustrations {
+			columns: 2;
 		}
 	}
 </style>
 
-<script define:vars={{pageLang: currentLang}}>
-	document.documentElement.lang = pageLang;
+<script define:vars={{illustrationsLinkText, animaticsLinkText}}>
+	const introModal = document.getElementById('intro');
+	const closeIntroBtn = document.getElementById('close-intro-btn');
+	const aboutLink = document.getElementById('about');
 
-	// Show success message after clicking "contact"
-	var contactResultExplanation = document.getElementById("contact-result");
+	const displayShow = 'block', displayHide = 'none';
 
-	document.getElementById("contact")?.addEventListener("click", () => {
-		navigator.clipboard.writeText("oldkamelle@gmail.com");
+	if(closeIntroBtn && introModal && aboutLink) {
+		closeIntroBtn.addEventListener('click', () => {
+			introModal.style.display = displayHide;
+			aboutLink.style.display = displayShow;
+		});
 
-		contactResultExplanation.style.opacity = "100%";
-		setTimeout(() => contactResultExplanation.style.opacity = "0", 2000);
-	});
+		aboutLink.addEventListener('click', () => {
+			introModal.style.display = displayShow;
+			aboutLink.style.display = displayHide;
+		});
+	}
+
+	const portfolioSwitchLink = document.getElementById('portfolio-switch');
+	const illustrationsSection = document.getElementById('illustrations'),
+		animaticsSection = document.getElementById('animatics');
+
+	if(portfolioSwitchLink && illustrationsSection && animaticsSection) {
+		portfolioSwitchLink.addEventListener('click', () => {
+			if(animaticsSection.style.display === displayShow) {
+				illustrationsSection.style.display = displayShow;
+				animaticsSection.style.display = displayHide;
+
+				portfolioSwitchLink.textContent = animaticsLinkText;
+			}
+			else {
+				illustrationsSection.style.display = displayHide;
+				animaticsSection.style.display = displayShow;
+
+				portfolioSwitchLink.textContent = illustrationsLinkText;
+			}
+		});
+	}
 </script>

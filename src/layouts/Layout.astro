@@ -1,17 +1,57 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { LOCALES } from "../misc/i18n/locales.ts";
+import { getRouteLangParam, useTranslations } from '../misc/i18n/utils';
+import favicon from "../misc/assets/favicon.png";
+
+export function getStaticPaths() {
+	return Object.keys(LOCALES)
+				 .map(lang => ({
+					params: { lang: getRouteLangParam(lang) },
+					props: { currentLang: lang }
+				 }));
+}
+
+const { currentLang } = Astro.props;
+const translate = useTranslations(currentLang);
+
+---
+
 <!doctype html>
 <html lang="sq">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/png" href="https://res.cloudinary.com/oldkamelle/image/upload/v1736811757/stijs8wrhbqkkysuqlgg.png" />
+		<link rel="icon" type="image/png" href={favicon.src} />
 		<meta name="generator" content={Astro.generator} />
-		<title>oldkamelle</title>
 
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Ovo&display=swap" rel="stylesheet">
+		<meta name="description" content="oldkamelle's portfolio, showcasing illustrations & animatics">
+		<meta name="keywords" content="oldkamelle,artist,traditional artist,digital artist,illustrations,animatics">
+		<meta name="googlebot" content="notranslate">
+		<title>oldkamelle</title>
 	</head>
 	<body>
+		<nav>
+			<ul class="clear-list">
+				<li id="about">
+					<button class="clear-btn">{translate("about")}</button>
+				</li>
+				<li>
+					<button id="portfolio-switch" class="clear-btn">{translate("animatics")}</button>
+				</li>
+				<li>
+					<label hidden for="lang">{translate("language")}</label>
+					<select name="lang" onchange="window.location.href=this.value">
+						{Object.keys(LOCALES).map(lang => (
+							<option selected={currentLang == lang} value={getRelativeLocaleUrl(lang)} style={currentLang == lang ? "font-style: bold;" : ""}>
+								{LOCALES[lang].label}
+							</option>
+						))}
+					</select>
+				</li>
+			</ul>
+		</nav>
+
 		<slot />
 
 		<script src="https://rawcdn.githack.com/nextapps-de/spotlight/0.7.8/dist/spotlight.bundle.js"></script>
@@ -19,21 +59,28 @@
 </html>
 
 <style is:global>
-	html,
-	body {
-		--dark-color: #602457;
-		--light-color: #acd49d;
-		--highlight-color: #01dbfe;
-
-		margin: 0;
-		background-color: var(--dark-color);
-
-		color: var(--light-color);
-		font-family: "Ovo", serif;
-		font-size: 20px;
+	* {
+		box-sizing: border-box;
 	}
 
-	button {
+	body {
+		--dark-grey-color: #2d2d2e;
+		--white-color: #e9e9ef;
+        --highlight-color: #5A6ADE;
+
+		margin: 0;
+
+		background-color: var(--dark-grey-color);
+		color: var(--white-color);
+		font-size: larger;
+		font-family: ui-serif;
+    }
+
+	a, a:hover, a:focus, a:active {
+        color: inherit;
+    }
+
+	.clear-btn {
 		background: none;
 		color: inherit;
 		border: none;
@@ -41,18 +88,54 @@
 		font: inherit;
 		cursor: pointer;
 		outline: inherit;
-
-		text-decoration: underline;
 	}
 
-	a {
-		color: inherit;
-	}
-
-	.base-list {
-		list-style: none;
+	.clear-list {
+        list-style: none;
 		padding: 0;
 		margin: 0;
+    }
+
+	.icon {
+        width: 35px;
+        height: 35px;
+        color: var(--highlight-color);
+    }
+</style>
+
+<style>
+	nav {
+		position: fixed;
+		bottom: 0;
+		right: 0;
+		z-index: 2;
+		margin: 0.5em 1em;
+		margin-top: 0;
+
+		ul {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: flex-end;
+			gap: 0.5em 1em;
+
+			li {
+				padding: 0.2em 0.5em;
+				background-color: rgb(from var(--dark-grey-color) r g b / 85%);
+			}
+
+			#about {
+				display: none;
+			}
+		}
+
+		select {
+        background-color: inherit;
+		color: inherit;
+		font-family: inherit;
+		font-size: inherit;
+		border: none;
+		border-bottom: 1px solid;
+   		}
 	}
 </style>
 
