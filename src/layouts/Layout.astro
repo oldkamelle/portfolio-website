@@ -39,8 +39,7 @@ const translate = useTranslations(currentLang);
 					<button id="portfolio-switch" class="clear-btn">{translate("animatics")}</button>
 				</li>
 				<li>
-					<label hidden for="lang">{translate("language")}</label>
-					<select name="lang" onchange="window.location.href=this.value">
+					<select aria-label={translate("language")} onchange="window.location.href=this.value">
 						{Object.keys(LOCALES).map(lang => (
 							<option selected={currentLang == lang} value={getRelativeLocaleUrl(lang)} style={currentLang == lang ? "font-style: bold;" : ""}>
 								{LOCALES[lang].label}
@@ -52,8 +51,6 @@ const translate = useTranslations(currentLang);
 		</nav>
 
 		<slot />
-
-		<script src="https://rawcdn.githack.com/nextapps-de/spotlight/0.7.8/dist/spotlight.bundle.js"></script>
 	</body>
 </html>
 
