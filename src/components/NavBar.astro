@@ -1,0 +1,262 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { LOCALES } from '../misc/i18n/locales';
+import { getPathWithoutLocale, useTranslations } from '../misc/i18n/utils';
+
+
+interface Props {
+	currentLang: keyof typeof LOCALES
+}
+
+const { currentLang } = Astro.props;
+
+const path = getPathWithoutLocale(Astro.url.pathname, currentLang);
+const translate = useTranslations(currentLang);
+---
+
+<!-- <script define:vars={{path, temp: Astro.url.pathname}}>
+    console.log(path, temp)
+
+</script> -->
+
+<header role="banner" id="main-header">
+    <h1>
+        <a href={getRelativeLocaleUrl(currentLang)}>
+            <span style="font-weight:bold; font-size: larger;">oldkamelle</span><br/>
+            <span style="font-style: italic">{translate('tagline')}</span>
+        </a>
+    </h1>
+
+    <nav>
+        <ul>
+            {path == '/' ? (
+                <li><a href="#artworks">{translate('illustrations')}</a></li>
+                <li><a href="#animatics">{translate('animatics')}</a></li>
+            ) : (
+                <li><a href={getRelativeLocaleUrl(currentLang)}>{translate('portfolio')}</a></li>
+            )}
+            <li><a href={getRelativeLocaleUrl(currentLang, 'goods')}>{translate('goods')}</a></li>
+            <li>
+                <select name="language" onchange="window.location.href=this.value">
+                    {Object.entries(LOCALES).map(([key, value]) => (
+                        <option selected={currentLang == key} value={getRelativeLocaleUrl(key, path)}>{value.label}</option>
+                    ))}
+                </select>
+            </li>
+        </ul>
+    </nav>
+
+    <ul id="links">
+        <li>
+            <a href="mailto:oldkamelle@gmail.com">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <title>{translate('contact')}</title>
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M22 7.535v9.465a3 3 0 0 1 -2.824 2.995l-.176 .005h-14a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-9.465l9.445 6.297l.116 .066a1 1 0 0 0 .878 0l.116 -.066l9.445 -6.297z" />
+                    <path d="M19 4c1.08 0 2.027 .57 2.555 1.427l-9.555 6.37l-9.555 -6.37a2.999 2.999 0 0 1 2.354 -1.42l.201 -.007h14z" />
+                </svg>
+            </a>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/@oldkamelle">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <title>Youtube</title>
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M18 3a5 5 0 0 1 5 5v8a5 5 0 0 1 -5 5h-12a5 5 0 0 1 -5 -5v-8a5 5 0 0 1 5 -5zm-9 6v6a1 1 0 0 0 1.514 .857l5 -3a1 1 0 0 0 0 -1.714l-5 -3a1 1 0 0 0 -1.514 .857z" />
+                </svg>
+            </a>
+        </li>
+        <li>
+            <a href="https://www.instagram.com/oldkamelle">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <title>Instagram</title>
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M16 3a5 5 0 0 1 5 5v8a5 5 0 0 1 -5 5h-8a5 5 0 0 1 -5 -5v-8a5 5 0 0 1 5 -5zm-4 5a4 4 0 0 0 -3.995 3.8l-.005 .2a4 4 0 1 0 4 -4m4.5 -1.5a1 1 0 0 0 -.993 .883l-.007 .127a1 1 0 0 0 1.993 .117l.007 -.127a1 1 0 0 0 -1 -1" />
+                </svg>
+            </a>
+        </li>
+        <li>
+            <a href="https://www.tumblr.com/blog/oldkamelle">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="5 0 14 24" fill="currentColor">
+                    <title>Tumblr</title>
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M14 2a1 1 0 0 1 1 1v3h3a1 1 0 0 1 .993 .883l.007 .117v4a1 1 0 0 1 -1 1h-3v4h3a1 1 0 0 1 .993 .883l.007 .117v4a1 1 0 0 1 -1 1h-4a5 5 0 0 1 -5 -5v-5h-3a1 1 0 0 1 -.993 -.883l-.007 -.117v-4a1 1 0 0 1 1 -1h1a2 2 0 0 0 2 -2v-1a1 1 0 0 1 1 -1z" />
+                </svg>
+            </a>
+        </li>
+    </ul>
+
+    <button id="burger" type="button" data-open="false">
+        <svg id="show-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"  stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M4 6l16 0" /><path d="M4 12l16 0" /><path d="M4 18l16 0" />
+        </svg>
+
+        <svg id="close-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M18 6l-12 12" />
+            <path d="M6 6l12 12" />
+        </svg>
+    </button>
+</header>
+
+<style>
+    header {
+        z-index: 100;
+
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        gap: 1em;
+        align-items: center;
+
+        margin-top: auto;
+        padding: 0.5em 2em 1em;
+
+        backdrop-filter: blur(8px);
+    }
+
+    h1, ul > li, #burger {
+        filter:
+            drop-shadow(1px 1px 0.2em var(--bg-color))
+            drop-shadow(-1px -1px 0.2em var(--bg-color));
+    }
+
+    h1 {
+        margin-right: auto;
+        font-size: medium;
+        font-weight: normal;
+
+        a {
+            text-decoration: none;
+        }
+    }
+
+    ul {
+        list-style: none;
+
+        li {
+            display: inline-block;
+            margin: 0 0.5em;
+        }
+    }
+
+    #links > li {
+        margin: 0 0.2em;
+    }
+
+    select {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: inherit;
+
+        color: inherit;
+        color: var(--bg-color);
+        background-color: var(--text-color);
+    }
+
+    #burger {
+        background: none;
+        color: inherit;
+        border: none;
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
+        outline: inherit;
+
+        display: none;
+
+        #close-menu {
+            display: none;
+        }
+    }
+
+    header.burger-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+
+        background-color: rgba(from var(--bg-color) r g b / 0.5);
+        backdrop-filter: blur(10px);
+
+        flex-direction: column;
+        text-align: center;
+
+        h1 {
+            margin-right: 0;
+            margin-top: auto;
+        }
+
+        ul {
+            padding: 0;
+        }
+
+        nav, #links {
+            display: block;
+        }
+
+        nav  > ul > li {
+            display: block;
+            margin: 1em;
+        }
+
+        #burger {
+            padding-bottom: 1em;
+            margin-left: auto;
+
+            #close-menu {
+                display: block;
+            }
+
+            #show-menu {
+                display: none;
+            }
+        }
+    }
+
+    @media (max-width: 855px) {
+        #burger {
+            display: block;
+        }
+
+        nav, #links {
+            display: none;
+        }
+    }
+</style>
+
+<script>
+    const showBurgerMenuClass = 'burger-menu';
+    const smallScreensQuery = window.matchMedia('(min-width: 850px)');
+
+    const header = document.getElementById('main-header'),
+        burgerButton = document.getElementById('burger');
+
+    // Button click to open / close menu on small screens
+    burgerButton?.addEventListener('click', () => {
+        if(burgerButton.dataset.open == 'true') {
+            burgerButton.dataset.open = 'false';
+            header?.classList.remove(showBurgerMenuClass);
+        }
+        else {
+            burgerButton.dataset.open = 'true';
+            header?.classList.add(showBurgerMenuClass);
+        }
+    })
+
+    // On big screens, remove small-screen menu formatting
+    smallScreensQuery.addEventListener('change', () => {
+        if (burgerButton)
+            burgerButton.dataset.open = 'false';
+
+        header?.classList.remove(showBurgerMenuClass);
+    })
+</script>

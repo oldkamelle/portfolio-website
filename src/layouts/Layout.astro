@@ -1,8 +1,9 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
-import { LOCALES } from "../misc/i18n/locales.ts";
-import { getRouteLangParam, useTranslations } from '../misc/i18n/utils';
+import NavBar from "../components/NavBar.astro";
 import favicon from "../misc/assets/favicon.png";
+import { LOCALES } from "../misc/i18n/locales";
+import { getRouteLangParam } from "../misc/i18n/utils";
+
 
 export function getStaticPaths() {
 	return Object.keys(LOCALES)
@@ -12,13 +13,15 @@ export function getStaticPaths() {
 				 }));
 }
 
-const { currentLang } = Astro.props;
-const translate = useTranslations(currentLang);
+interface Props {
+	currentLang: keyof typeof LOCALES
+}
 
+const { currentLang } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="sq">
+<html lang={currentLang}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -30,114 +33,37 @@ const translate = useTranslations(currentLang);
 		<title>oldkamelle</title>
 	</head>
 	<body>
-		<nav>
-			<ul class="clear-list">
-				<li id="about">
-					<button class="clear-btn">{translate("about")}</button>
-				</li>
-				<li>
-					<button id="portfolio-switch" class="clear-btn">{translate("animatics")}</button>
-				</li>
-				<li>
-					<select aria-label={translate("language")} onchange="window.location.href=this.value">
-						{Object.keys(LOCALES).map(lang => (
-							<option selected={currentLang == lang} value={getRelativeLocaleUrl(lang)} style={currentLang == lang ? "font-style: bold;" : ""}>
-								{LOCALES[lang].label}
-							</option>
-						))}
-					</select>
-				</li>
-			</ul>
-		</nav>
-
-		<slot />
-	</body>
+		<slot/>
+        <NavBar currentLang={currentLang} />
+    </body>
 </html>
 
 <style is:global>
-	* {
-		box-sizing: border-box;
-	}
+    * {
+        --bg-color: #191b1f;
+		--text-color: #F0F2F5;
 
-	body {
-		--dark-grey-color: #2d2d2e;
-		--white-color: #e9e9ef;
-        --highlight-color: #5A6ADE;
-
-		margin: 0;
-
-		background-color: var(--dark-grey-color);
-		color: var(--white-color);
-		font-size: larger;
-		font-family: ui-serif;
+        box-sizing: border-box;
     }
 
-	a, a:hover, a:focus, a:active {
+    body {		
+		margin: 0;
+		font-family: serif;
+
+		background-color: var(--bg-color);
+		color: var(--text-color);
+
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+	}
+
+	a, a:visited {
         color: inherit;
     }
 
-	.clear-btn {
-		background: none;
-		color: inherit;
-		border: none;
-		padding: 0;
-		font: inherit;
-		cursor: pointer;
-		outline: inherit;
-	}
-
-	.clear-list {
-        list-style: none;
-		padding: 0;
-		margin: 0;
-    }
-
-	.icon {
-        width: 35px;
-        height: 35px;
-        color: var(--highlight-color);
-    }
-</style>
-
-<style>
-	nav {
-		position: fixed;
-		bottom: 0;
-		right: 0;
-		z-index: 2;
-		margin: 0.5em 1em;
-		margin-top: 0;
-
-		ul {
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: flex-end;
-			gap: 0.5em 1em;
-
-			li {
-				padding: 0.2em 0.5em;
-				background-color: rgb(from var(--dark-grey-color) r g b / 85%);
-			}
-
-			#about {
-				display: none;
-			}
-		}
-
-		select {
-        background-color: inherit;
-		color: inherit;
-		font-family: inherit;
-		font-size: inherit;
-		border: none;
-		border-bottom: 1px solid;
-   		}
+	svg {
+		width: 24px;
+        height: 24px;
 	}
 </style>
-
-<script>
-	const consoleExtraStyle = "font-size: 18px";
-
-	console.log("%cYou're either technical, nosy, or hit every possible key combination on your keyboard...", consoleExtraStyle);
-	console.log("%cWhichever it may be, have this for your trouble: https://github.com/oldkamelle/portfolio-website", consoleExtraStyle);
-</script>

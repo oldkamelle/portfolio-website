@@ -2,40 +2,42 @@ export const defaultLang = 'sq';
 
 export const ui: UiTranslations = {
     'sq': {
+        contact: "Kontakt",
         language: "Gjuha",
-        closeBtn: "Mbyll",
+
         tagline: "Artiste tradicionale & digjitale",
         
-        about: "Kush?",
-        contact: "Kontakt",
+        portfolio: "Portofoli",
         illustrations: "Vizatime",
         animatics: "Animacione",
 
-        backToTopAriaLabel: "Kthehu në krye",
+        goods: "Produkte",
     },
     'en': {
+        contact: "Contact",
         language: "Language",
-        closeBtn: "Close",
+        
         tagline: "Traditional & digital artist",
         
-        about: "About",
-        contact: "Contact",
+        portfolio: "Portfolio",
         illustrations: "Illustrations",
         animatics: "Animatics",
 
-        backToTopAriaLabel: "Back to top",
+        goods: "Goods",
     }
 } as const;
 
 interface UiTranslations {
     [key: string]: {
+        contact: string,
         language: string,
-        closeBtn: string,
+
         tagline: string,
-        about: string,
+
+        portfolio: string,
         illustrations: string,
         animatics: string,
-        contact: string,
-        backToTopAriaLabel: string,
+
+        goods: string,
     }
 }

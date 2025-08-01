@@ -10,3 +10,14 @@ export function useTranslations(lang: string) {
 
 export const getRouteLangParam = (lang: string): string | undefined => 
     lang == defaultLang ? undefined : lang;
+
+export function getPathWithoutLocale(pathname: string, currentLocale: string) : string {
+    if(currentLocale == defaultLang)
+        return pathname;
+    else {
+        const pathPieces = pathname.split('/');
+        pathPieces.splice(1, 1); // Removing the language code
+        
+        return pathPieces.join('/');
+    } 
+}

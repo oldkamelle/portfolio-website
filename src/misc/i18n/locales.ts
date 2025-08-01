@@ -1,14 +1,8 @@
-export const LOCALES: LocaleSetting = {
+export const LOCALES = {
     'sq': {
         "label": "Shqip",
     },
     'en': {
         "label": "English",
     },
-}
-
-interface LocaleSetting {
-    [key: string]: {
-        label: string;
-    }
 }
