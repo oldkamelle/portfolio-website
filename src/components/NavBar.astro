@@ -14,11 +14,6 @@ const path = getPathWithoutLocale(Astro.url.pathname, currentLang);
 const translate = useTranslations(currentLang);
 ---
 
-<!-- <script define:vars={{path, temp: Astro.url.pathname}}>
-    console.log(path, temp)
-
-</script> -->
-
 <header role="banner" id="main-header">
     <h1>
         <a href={getRelativeLocaleUrl(currentLang)}>
