@@ -47,6 +47,13 @@ const translate = useTranslations(currentLang);
 
         display: flex;
         flex-wrap: wrap;
+        justify-content: start;
         gap: 2em;
+    }
+
+    @media (max-width: 800px) {
+        #goods {
+            justify-content: center;
+        }
     }
 </style>

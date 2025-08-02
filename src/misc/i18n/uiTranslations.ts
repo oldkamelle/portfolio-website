@@ -12,6 +12,8 @@ export const ui: UiTranslations = {
         animatics: "Animacione",
 
         goods: "Produkte",
+
+        sectionSelection: 'Përzgjidh një seksion',
     },
     'en': {
         contact: "Contact",
@@ -24,6 +26,8 @@ export const ui: UiTranslations = {
         animatics: "Animatics",
 
         goods: "Goods",
+
+        sectionSelection: 'Select a section',
     }
 } as const;
 
@@ -39,5 +43,7 @@ interface UiTranslations {
         animatics: string,
 
         goods: string,
+
+        sectionSelection: string,
     }
 }

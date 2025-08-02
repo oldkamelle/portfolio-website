@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { LOCALES } from "../../misc/i18n/locales";
-import { getRouteLangParam } from "../../misc/i18n/utils";
+import { getRouteLangParam, useTranslations } from "../../misc/i18n/utils";
 import { getAnimatics, getArtworks } from "../../misc/sanity/dataLoaders";
 
 export function getStaticPaths() {
@@ -18,6 +18,8 @@ interface Props {
 
 const { currentLang } = Astro.props;
 
+const translate = useTranslations(currentLang);
+
 const artworks = await getArtworks(currentLang), 
     animatics = await getAnimatics(currentLang);
 
@@ -27,6 +29,13 @@ const artworkImageBaseLink = 'https://res.cloudinary.com/oldkamelle/image/upload
 
 <Layout currentLang={currentLang}>
     <main>
+        <header>
+            <select onchange="window.location.href=this.value">
+                <option value="#artworks">{translate('illustrations')}</option>
+                <option value="#animatics">{translate('animatics')}</option>
+            </select>
+        </header>
+
         <section id="artworks">
             {artworks.map(work => (
                 <a class="spotlight" data-title={work.title} href={`https://res.cloudinary.com/oldkamelle/image/upload/q_auto:good/${work.urlId}`}>
@@ -61,6 +70,19 @@ const artworkImageBaseLink = 'https://res.cloudinary.com/oldkamelle/image/upload
 </Layout>
 
 <style>
+    header {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    select {
+        padding: 0.5em 1em;
+        border: 1px solid var(--bg-color);
+        border-radius: 0.8em;
+    }
+
     #artworks {
         columns: 5;
         column-gap: 0;
@@ -78,6 +100,7 @@ const artworkImageBaseLink = 'https://res.cloudinary.com/oldkamelle/image/upload
 
     #animatics {
         margin: 4em;
+        margin-bottom: 5.5em;
 
         display: flex;
         flex-wrap: wrap;

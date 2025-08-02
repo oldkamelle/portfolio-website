@@ -14,34 +14,32 @@ const path = getPathWithoutLocale(Astro.url.pathname, currentLang);
 const translate = useTranslations(currentLang);
 ---
 
-<header role="banner" id="main-header">
+<header role="banner">
     <h1>
-        <a href={getRelativeLocaleUrl(currentLang)}>
-            <span style="font-weight:bold; font-size: larger;">oldkamelle</span><br/>
-            <span style="font-style: italic">{translate('tagline')}</span>
-        </a>
+        <span class="title">oldkamelle</span>
+        <br/>
+        <span class="tagline">{translate('tagline')}</span>
     </h1>
 
     <nav>
         <ul>
-            {path == '/' ? (
-                <li><a href="#artworks">{translate('illustrations')}</a></li>
-                <li><a href="#animatics">{translate('animatics')}</a></li>
-            ) : (
-                <li><a href={getRelativeLocaleUrl(currentLang)}>{translate('portfolio')}</a></li>
-            )}
-            <li><a href={getRelativeLocaleUrl(currentLang, 'goods')}>{translate('goods')}</a></li>
+            <li class={path == '/' ? 'active-page' : ''}><a href={getRelativeLocaleUrl(currentLang)}>{translate('portfolio')}</a></li>
+            <li class={path == '/goods/' ? 'active-page' : ''}><a href={getRelativeLocaleUrl(currentLang, 'goods')}>{translate('goods')}</a></li>
+
             <li>
-                <select name="language" onchange="window.location.href=this.value">
+                <select aria-label="Language" onchange="window.location.href=this.value">
+                    <option></option>
                     {Object.entries(LOCALES).map(([key, value]) => (
-                        <option selected={currentLang == key} value={getRelativeLocaleUrl(key, path)}>{value.label}</option>
+                        <option selected={currentLang == key} value={getRelativeLocaleUrl(key, path)}>
+                            {value.label}
+                        </option>
                     ))}
                 </select>
             </li>
         </ul>
     </nav>
 
-    <ul id="links">
+    <ul id="socials-list">
         <li>
             <a href="mailto:oldkamelle@gmail.com">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -80,178 +78,83 @@ const translate = useTranslations(currentLang);
             </a>
         </li>
     </ul>
-
-    <button id="burger" type="button" data-open="false">
-        <svg id="show-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"  stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <path d="M4 6l16 0" /><path d="M4 12l16 0" /><path d="M4 18l16 0" />
-        </svg>
-
-        <svg id="close-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <path d="M18 6l-12 12" />
-            <path d="M6 6l12 12" />
-        </svg>
-    </button>
 </header>
 
 <style>
     header {
-        z-index: 100;
+        padding: 1em 2em;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 2em;
 
         position: sticky;
-        bottom: 0;
+        top: 0;
         left: 0;
         width: 100vw;
 
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        gap: 1em;
-        align-items: center;
-
-        margin-top: auto;
-        padding: 0.5em 2em 1em;
-
-        backdrop-filter: blur(8px);
+        backdrop-filter: blur(5px);
+        background-color: rgb(from var(--bg-color) r g b / 0.4);
     }
 
-    h1, ul > li, #burger {
-        filter:
-            drop-shadow(1px 1px 0.2em var(--bg-color))
-            drop-shadow(-1px -1px 0.2em var(--bg-color));
+    a {
+        text-decoration: none;
     }
 
     h1 {
         margin-right: auto;
-        font-size: medium;
+
+        font-size: inherit;
         font-weight: normal;
 
-        a {
-            text-decoration: none;
+        .title {
+            font-weight: bold;
+            font-size: larger;
         }
+
+        .tagline {
+            font-style: italic;
+        }
+    }
+
+    nav > ul > li {
+        padding: 0.5em;
+    }
+
+    #socials-list > li > a {
+        padding: 0.2em;
     }
 
     ul {
         list-style: none;
+        padding: 0;
+        margin: 0;
 
         li {
             display: inline-block;
-            margin: 0 0.5em;
         }
     }
 
-    #links > li {
-        margin: 0 0.2em;
+    .active-page {
+        text-decoration: underline;
     }
 
-    select {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-family: inherit;
-        font-size: inherit;
-
-        color: inherit;
-        color: var(--bg-color);
-        background-color: var(--text-color);
+    svg {
+        width: 27px;
+        height: 27px;
     }
 
-    #burger {
-        background: none;
-        color: inherit;
-        border: none;
-        padding: 0;
-        font: inherit;
-        cursor: pointer;
-        outline: inherit;
-
-        display: none;
-
-        #close-menu {
-            display: none;
+    @media (max-width: 800px) {
+        header {
+            flex-direction: column;
+            justify-items: center;
+            gap: 1em;
         }
-    }
-
-    header.burger-menu {
-        position: fixed;
-        top: 0;
-        left: 0;
-        min-height: 100vh;
-
-        background-color: rgba(from var(--bg-color) r g b / 0.5);
-        backdrop-filter: blur(10px);
-
-        flex-direction: column;
-        text-align: center;
 
         h1 {
             margin-right: 0;
-            margin-top: auto;
-        }
-
-        ul {
-            padding: 0;
-        }
-
-        nav, #links {
-            display: block;
-        }
-
-        nav  > ul > li {
-            display: block;
-            margin: 1em;
-        }
-
-        #burger {
-            padding-bottom: 1em;
-            margin-left: auto;
-
-            #close-menu {
-                display: block;
-            }
-
-            #show-menu {
-                display: none;
-            }
-        }
-    }
-
-    @media (max-width: 855px) {
-        #burger {
-            display: block;
-        }
-
-        nav, #links {
-            display: none;
+            margin-bottom: 0;
         }
     }
 </style>
-
-<script>
-    const showBurgerMenuClass = 'burger-menu';
-    const smallScreensQuery = window.matchMedia('(min-width: 850px)');
-
-    const header = document.getElementById('main-header'),
-        burgerButton = document.getElementById('burger');
-
-    // Button click to open / close menu on small screens
-    burgerButton?.addEventListener('click', () => {
-        if(burgerButton.dataset.open == 'true') {
-            burgerButton.dataset.open = 'false';
-            header?.classList.remove(showBurgerMenuClass);
-        }
-        else {
-            burgerButton.dataset.open = 'true';
-            header?.classList.add(showBurgerMenuClass);
-        }
-    })
-
-    // On big screens, remove small-screen menu formatting
-    smallScreensQuery.addEventListener('change', () => {
-        if (burgerButton)
-            burgerButton.dataset.open = 'false';
-
-        header?.classList.remove(showBurgerMenuClass);
-    })
-</script>

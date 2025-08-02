@@ -48,23 +48,23 @@ const { currentLang, product } = Astro.props;
             border-top-left-radius: 0.5em;
             border-top-right-radius: 0.5em;
         }
+    }
 
-        figcaption {
-            margin-top: 0.3em;
+    figcaption {
+        margin-top: 0.3em;
+        
+        a {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
             
-            a {
-                display: flex;
-                align-items: center;
-                gap: 0.5em;
-                
-                padding: 0.5em 1em;
-                
-                background-color: var(--text-color);
-                color: var(--bg-color);
-                
-                text-align: center;
-                text-decoration: none;
-            }
+            padding: 0.5em 1em;
+            
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            
+            text-align: center;
+            text-decoration: none;
         }
     }
 </style>

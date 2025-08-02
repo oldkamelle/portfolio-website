@@ -33,18 +33,18 @@ const { currentLang } = Astro.props;
 		<title>oldkamelle</title>
 	</head>
 	<body>
-		<slot/>
         <NavBar currentLang={currentLang} />
+		<slot/>
     </body>
 </html>
 
 <style is:global>
     * {
-        --bg-color: #191b1f;
+		--bg-color: #191b1f;
 		--text-color: #F0F2F5;
 
         box-sizing: border-box;
-    }
+	}
 
     body {		
 		margin: 0;
@@ -62,8 +62,16 @@ const { currentLang } = Astro.props;
         color: inherit;
     }
 
+	select {
+        font-family: inherit;
+        font-size: inherit;
+        border: none;
+        background-color: var(--text-color);
+        color: var(--bg-color);
+    }
+
 	svg {
-		width: 24px;
-        height: 24px;
+		width: 25px;
+        height: 25px;
 	}
 </style>
