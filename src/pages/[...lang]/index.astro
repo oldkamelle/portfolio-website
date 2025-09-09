@@ -38,7 +38,7 @@ const artworkImageBaseLink = 'https://res.cloudinary.com/oldkamelle/image/upload
 
         <section id="artworks">
             {artworks.map(work => (
-                <a class="spotlight" data-title={work.title} href={`https://res.cloudinary.com/oldkamelle/image/upload/q_auto:good/${work.urlId}`}>
+                <a class="spotlight" data-title={work.title} href={`https://res.cloudinary.com/oldkamelle/image/upload/q_auto:good/${work.urlId}.jpg`}>
                     <picture>
                         <source srcset={`${artworkImageBaseLink}/${work.urlId}.avif`} type="image/avif" />
                         <source srcset={`${artworkImageBaseLink}/${work.urlId}.webp`} type="image/webp" />
