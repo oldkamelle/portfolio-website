@@ -23,11 +23,8 @@ const translate = useTranslations(currentLang);
 
     <nav>
         <ul>
-            <li class={path == '/' ? 'active-page' : ''}><a href={getRelativeLocaleUrl(currentLang)}>{translate('portfolio')}</a></li>
-            <li class={path == '/goods/' ? 'active-page' : ''}><a href={getRelativeLocaleUrl(currentLang, 'goods')}>{translate('goods')}</a></li>
-
             <li>
-                <select aria-label="Language" onchange="window.location.href=this.value">
+                <select aria-label={translate('language')} onchange="window.location.href=this.value">
                     <option></option>
                     {Object.entries(LOCALES).map(([key, value]) => (
                         <option selected={currentLang == key} value={getRelativeLocaleUrl(key, path)}>
