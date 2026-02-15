@@ -29,13 +29,6 @@ const artworkImageBaseLink = 'https://res.cloudinary.com/oldkamelle/image/upload
 
 <Layout currentLang={currentLang}>
     <main>
-        <header>
-            <select onchange="window.location.href=this.value">
-                <option value="#artworks">{translate('illustrations')}</option>
-                <option value="#animatics">{translate('animatics')}</option>
-            </select>
-        </header>
-
         <section id="artworks">
             {artworks.map(work => (
                 <a class="spotlight" data-title={work.title} href={`https://res.cloudinary.com/oldkamelle/image/upload/q_auto:good/${work.urlId}.jpg`}>
@@ -48,20 +41,20 @@ const artworkImageBaseLink = 'https://res.cloudinary.com/oldkamelle/image/upload
             ))}
         </section>
 
-        <br/>
-
         <section id="animatics">
             {animatics.map(animatic => (
-                <a href={animatic.url}>
-                    <figure>
-                        <picture>
-                            <source srcset={`${animaticImageBaseLink}/${animatic.previewPicUrlId}.avif`} type="image/avif" />
-                            <source srcset={`${animaticImageBaseLink}/${animatic.previewPicUrlId}.webp`} type="image/webp" />
-                            <img src={`${animaticImageBaseLink}/${animatic.previewPicUrlId}.gif`} alt={animatic.previewPicAlt} loading="lazy" />
-                        </picture>
-                        <figcaption>{animatic.title}</figcaption>
-                    </figure>
-                </a>
+                <article>
+                    <a href={animatic.url}>
+                        <figure>
+                            <picture>
+                                <source srcset={`${animaticImageBaseLink}/${animatic.previewPicUrlId}.avif`} type="image/avif" />
+                                <source srcset={`${animaticImageBaseLink}/${animatic.previewPicUrlId}.webp`} type="image/webp" />
+                                <img src={`${animaticImageBaseLink}/${animatic.previewPicUrlId}.gif`} alt={animatic.previewPicAlt} loading="lazy" />
+                            </picture>
+                            <figcaption>{animatic.title}</figcaption>
+                        </figure>
+                    </a>
+                </article>
             ))}
         </section>
     </main>
@@ -70,43 +63,31 @@ const artworkImageBaseLink = 'https://res.cloudinary.com/oldkamelle/image/upload
 </Layout>
 
 <style>
-    header {
-        position: fixed;
-        bottom: 0;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    select {
-        padding: 0.5em 1em;
-        border: 1px solid var(--bg-color);
-        border-radius: 0.8em;
-    }
-
     #artworks {
         columns: 5;
-        column-gap: 0;
+        gap: 0.4em;
 
         img {
             display: block;
+            margin-bottom: 0.4em;
 
 			height: 100%;
             min-height: 10em;
             width: 100%;
-            
+
             object-fit: cover;
         }
     }
 
     #animatics {
-        margin: 4em;
-        margin-bottom: 5.5em;
+        margin: 4em 2em;
 
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
-        gap: 2em;
+        row-gap: 2em;
+        column-gap: 1em;
 
         figure {
             margin: 1em;
@@ -119,8 +100,8 @@ const artworkImageBaseLink = 'https://res.cloudinary.com/oldkamelle/image/upload
                 width: 100%;
                 object-fit: cover;
 
-                border-top-left-radius: 0.5em;
-                border-top-right-radius: 0.5em;
+                border-top-left-radius: 1em;
+                border-top-right-radius: 1em;
             }
 
             figcaption {
@@ -132,11 +113,11 @@ const artworkImageBaseLink = 'https://res.cloudinary.com/oldkamelle/image/upload
 
     @media (max-width: 1300px) {
         #artworks {
-            columns: 3;
+            columns: 4;
         }
     }
 
-    @media (max-width: 850px) {
+    @media (max-width: 750px) {
         #artworks {
             columns: 2;
         }
